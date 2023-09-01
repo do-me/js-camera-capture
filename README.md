@@ -1,4 +1,4 @@
-# js-camera-capture
+# JS-Camera-Capture
 
 Vanilla JS camera capture example, working on desktop and mobile based on navigator.mediaDevices.getUserMedia().
 
