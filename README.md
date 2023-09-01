@@ -35,6 +35,7 @@ stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user'
 PR's are very welcome, especially for enhancing the UI or adding more features. However, the codebase should be kept:
 - simple
 - small
+
 I used one html file only as it's easier to move around and download but I'm open for separating it properly in html, js, css.
 Feel free to create plugins or wrapper!
 
