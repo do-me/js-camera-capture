@@ -16,6 +16,8 @@ For more realistic use cases. `Activate Camera` opens a modal with the canvas. T
 
 ![image](https://github.com/do-me/js-camera-capture/assets/47481567/b9d45501-5cc7-410c-9ee3-6ea2300e231d)
 
+![image](https://github.com/do-me/js-camera-capture/assets/47481567/e8d08ad0-c7b3-4ced-853f-c6d16828fa75)
+
 ## Options
 
 If you'd like to activate the front camera on mobile as default (instead of the rear one) use the `facingMode: 'user'` instead of `facingMode: 'environment'`: 
@@ -29,3 +31,9 @@ stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user'
 PR's are very welcome, especially for enhancing the UI or adding more features. However, the codebase should be kept:
 - simple
 - small
+I used one html file only as it's easier to move around and download but I'm open for separating it properly in html, js, css.
+Feel free to create plugins or wrapper!
+
+## To Do
+- add camera switch for mobile phones
+- add logic when user rotates phone - the canvas currently doesn't follow the 90° rotation which leads to a weird UX
