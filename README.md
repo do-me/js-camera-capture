@@ -6,17 +6,21 @@ Designed as a basic user interface example for taking a picture and sending it t
 
 There are two versions.
 
-## Simple Version
-This version displays the video stream canvas directly to the html body (which might be good for testing and simple stuff). Pretty much without CSS modifications.
+## 1) Modal Version 
+**[Demo](https://do-me.github.io/js-camera-capture)**
 
-![image](https://github.com/do-me/js-camera-capture/assets/47481567/eb03dd4b-7458-4e99-accf-2a63a6030df0)
-
-## Modal Version 
-For more realistic use cases. `Activate Camera` opens a modal with the canvas. The buttons have some basic styling.
+For realistic use cases: `Activate Camera` opens a modal with the canvas. The buttons have some basic styling.
 
 ![image](https://github.com/do-me/js-camera-capture/assets/47481567/b9d45501-5cc7-410c-9ee3-6ea2300e231d)
 
 ![image](https://github.com/do-me/js-camera-capture/assets/47481567/e8d08ad0-c7b3-4ced-853f-c6d16828fa75)
+
+## 2) Simple Version
+**[Demo](https://do-me.github.io/js-camera-capture/simple-version)**
+
+This version displays the video stream canvas directly to the html body (which might be good for testing and simple stuff). Pretty much without CSS modifications.
+
+![image](https://github.com/do-me/js-camera-capture/assets/47481567/eb03dd4b-7458-4e99-accf-2a63a6030df0)
 
 ## Options
 
