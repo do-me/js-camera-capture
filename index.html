@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Capture</title>
+</head>
+
+<body>
+    <style>
+        #video,
+        #capturedImage {
+            display: none;
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        #freezeButton,
+        #sendButton,
+        #newImageButton,
+        #downloadButton,
+        #abortButton {
+            display: none;
+            z-index: 1000;
+            background-color: #ffffff47;
+            color: #3498db;
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.2s;
+            margin:10px
+        }
+
+        #freezeButton:hover,
+        #sendButton:hover,
+        #newImageButton:hover,
+        #downloadButton:hover,
+        #abortButton:hover {
+            background-color: #f0f0f0;
+            transform: scale(1.05);
+        }
+
+        #freezeButton{
+            background-color: rgb(228, 228, 228);
+        }
+
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1;
+        }
+
+        /* Styles for the content inside the overlay */
+        #overlay-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 98%;
+            transform: translate(-50%, -50%);
+            background-color: #00FFFFFF border-radius: 5px;
+        }
+
+        #button-container {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 10px;
+        }
+    </style>
+
+    <h1>Camera Capture</h1>
+    <p>Vanilla JS camera capture example, working on desktop and mobile based on navigator.mediaDevices.getUserMedia().
+    </p>
+    <p>Desgined as a basic user interface example for taking a picture and sending it to some server, here the <a
+            href="https://ntfy.sh">ntfy</a> channel: <a
+            href="https://ntfy.sh/js-camera-capture">https://ntfy.sh/js-camera-capture</a> </p>
+
+    <!-- All buttons -->
+    <button id="cameraButton">Activate Camera</button>
+
+    <div id="overlay">
+        <!-- Content inside the overlay -->
+        <div id="overlay-content">
+            <video id="video" autoplay></video>
+            <canvas id="canvas" style="display: none;"></canvas>
+            <img id="capturedImage" style="display: none;" alt="Captured Image">
+            <div id="button-container">
+                <button id="freezeButton"></button>
+                <button id="newImageButton">🔁</button>
+                <button id="downloadButton">💾</button>
+                <button id="sendButton">✅</button>
+                <button id="abortButton">❌</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const cameraButton = document.getElementById('cameraButton');
+        const freezeButton = document.getElementById('freezeButton');
+        const sendButton = document.getElementById('sendButton');
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const capturedImage = document.getElementById('capturedImage');
+        const abortButton = document.getElementById('abortButton');
+        const newImageButton = document.getElementById('newImageButton');
+        const downloadButton = document.getElementById('downloadButton');
+        const overlay = document.getElementById('overlay')
+
+        let stream;
+        let frozenFrame = null;
+
+        // Access the camera and stream the video
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                video.srcObject = stream;
+                video.style.display = 'block';
+                freezeButton.style.display = 'block';
+                abortButton.style.display = 'block';
+                cameraButton.style.display = 'none';
+            } catch (error) {
+                console.error('Error accessing camera:', error);
+            }
+        }
+
+        // Freeze the current frame from the camera stream
+        function freezeFrame() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Convert canvas to data URL
+            const dataURL = canvas.toDataURL('image/jpeg', 0.9);
+
+            // Display the frozen image
+            capturedImage.src = dataURL;
+            capturedImage.style.display = 'block';
+
+            // Store the frozen frame
+            frozenFrame = dataURL;
+
+            // Hide the video and show the send button
+            video.style.display = 'none';
+            freezeButton.style.display = 'none';
+            sendButton.style.display = 'block';
+            abortButton.style.display = 'block'
+            newImageButton.style.display = 'block';
+            downloadButton.style.display = 'block';
+        }
+
+        function downloadImage() {
+            if (capturedImage.src) {
+                const link = document.createElement('a');
+                link.href = frozenFrame
+                link.download = 'captured_image.jpg';
+                link.click();
+            }
+        }
+
+        function stopVideoAndClearCanvas() {
+            if (stream) {
+                // Stop the video stream
+                overlay.style.display = 'none';
+                const tracks = stream.getTracks();
+                tracks.forEach(track => track.stop());
+
+                // Clear the canvas
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Hide the canvas and captured image
+                canvas.style.display = 'none';
+                capturedImage.style.display = 'none';
+
+                // Show the camera button and hide the other buttons
+                cameraButton.style.display = 'block';
+                freezeButton.style.display = 'none';
+                sendButton.style.display = 'none';
+                abortButton.style.display = 'none';
+                newImageButton.style.display = 'none'
+                video.style.display = 'none';
+                downloadButton.style.display = 'none';
+                frozenFrame = null;
+            }
+        }
+
+        // Send the frozen image to a ntfy server
+        function sendFrozenFrame() {
+            if (frozenFrame) {
+                const blob = dataURItoBlob(frozenFrame);
+
+                const url = 'https://ntfy.sh/js-camera-capture';
+                const headers = { 'Filename': 'image.jpg' };
+
+                fetch(url, {
+                    method: 'PUT',
+                    body: blob,
+                    headers: headers
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log('Image sent successfully');
+                            cameraButton.style.display = 'block';
+                            stopVideoAndClearCanvas();
+
+                        } else {
+                            console.error('Error sending image:', response.statusText);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Fetch error:', error);
+                    });
+            }
+        }
+
+        function dataURItoBlob(dataURI) {
+            const byteString = atob(dataURI.split(',')[1]);
+            const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([ab], { type: mimeString });
+        }
+
+        function handleNewImageClick() {
+            overlay.style.display = 'block';
+            capturedImage.style.display = 'none';
+            sendButton.style.display = 'none';
+            newImageButton.style.display = 'none';
+            downloadButton.style.display = 'none';
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                startCamera();
+            } else {
+                console.error('getUserMedia is not supported on this browser.');
+            }
+        }
+
+        // event listeners
+        abortButton.addEventListener('click', stopVideoAndClearCanvas);
+        newImageButton.addEventListener('click', handleNewImageClick);
+        cameraButton.addEventListener('click', handleNewImageClick);
+        freezeButton.addEventListener('click', freezeFrame);
+        downloadButton.addEventListener('click', downloadImage);
+        sendButton.addEventListener('click', sendFrozenFrame);
+    </script>
+</body>
+
+</html>
