@@ -255,6 +255,22 @@
             }
         }
 
+        // Function to handle device orientation change
+        function handleOrientationChange() {
+            const canvas = document.getElementById('canvas');
+            if (window.orientation === 90 || window.orientation === -90) {
+                canvas.style.transform = 'rotate(90deg)';
+            } else {
+                canvas.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Listen for orientation change events
+        window.addEventListener('orientationchange', handleOrientationChange);
+
+        // Initial rotation setup
+        handleOrientationChange();
+
         // event listeners
         abortButton.addEventListener('click', stopVideoAndClearCanvas);
         newImageButton.addEventListener('click', handleNewImageClick);
