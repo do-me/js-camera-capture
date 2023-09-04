@@ -258,9 +258,13 @@
         // Function to handle device orientation change
         function handleOrientationChange() {
             const canvas = document.getElementById('canvas');
-            if (window.orientation === 90 || window.orientation === -90) {
+            if (window.orientation === 90) {
                 overlay.style.transform = 'rotate(90deg)';
-            } else {
+            } 
+            else if (window.orientation === -90){
+                overlay.style.transform = 'rotate(-90deg)';
+            }
+            else {
                 overlay.style.transform = 'rotate(0deg)';
             }
         }
