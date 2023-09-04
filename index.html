@@ -259,9 +259,9 @@
         function handleOrientationChange() {
             const canvas = document.getElementById('canvas');
             if (window.orientation === 90 || window.orientation === -90) {
-                canvas.style.transform = 'rotate(90deg)';
+                overlay.style.transform = 'rotate(90deg)';
             } else {
-                canvas.style.transform = 'rotate(0deg)';
+                overlay.style.transform = 'rotate(0deg)';
             }
         }
 
