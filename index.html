@@ -122,6 +122,7 @@
         const newImageButton = document.getElementById('newImageButton');
         const downloadButton = document.getElementById('downloadButton');
         const overlay = document.getElementById('overlay')
+        const overlayContent = document.getElementById('overlay-content')
 
         let stream;
         let frozenFrame = null;
@@ -254,26 +255,6 @@
                 console.error('getUserMedia is not supported on this browser.');
             }
         }
-
-        // Function to handle device orientation change
-        function handleOrientationChange() {
-            const canvas = document.getElementById('canvas');
-            if (window.orientation === 90) {
-                overlay.style.transform = 'rotate(-90deg)';
-            } 
-            else if (window.orientation === -90){
-                overlay.style.transform = 'rotate(90deg)';
-            }
-            else {
-                overlay.style.transform = 'rotate(0deg)';
-            }
-        }
-
-        // Listen for orientation change events
-        window.addEventListener('orientationchange', handleOrientationChange);
-
-        // Initial rotation setup
-        handleOrientationChange();
 
         // event listeners
         abortButton.addEventListener('click', stopVideoAndClearCanvas);
