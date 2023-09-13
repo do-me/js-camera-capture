@@ -15,6 +15,10 @@ For realistic use cases: `Activate Camera` opens a modal with the canvas. The bu
 
 ![image](https://github.com/do-me/js-camera-capture/assets/47481567/e8d08ad0-c7b3-4ced-853f-c6d16828fa75)
 
+There is another version with an additional text input option: **[with-text-input](https://do-me.github.io/js-camera-capture/with-text-input)**
+
+![image](https://github.com/do-me/js-camera-capture/assets/47481567/fbf61495-4e40-4b15-b978-3d91dda41b3d)
+
 ## 2) Simple Version
 **[Demo](https://do-me.github.io/js-camera-capture/simple-version)**
 
